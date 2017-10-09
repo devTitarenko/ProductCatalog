@@ -17,6 +17,17 @@ tr:nth-child(even) {
     background-color: #f2f2f2
 }
 
+div {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.block {
+    display: block;
+}
+
 /*Classes for creating dialogs*/
 
 .modalDialog {

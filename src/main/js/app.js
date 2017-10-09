@@ -13,7 +13,7 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {products: [], attributes: [], pageSize: 5, links: {}};
+        this.state = {products: [], attributes: [], pageSize: 3, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -311,7 +311,7 @@ class ProductList extends React.Component {
 
         return (
             <div>
-                <div>
+                <div className = {'block'}>
                     Items per page
                     <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
                 </div>
@@ -327,7 +327,7 @@ class ProductList extends React.Component {
                     {products}
                     </tbody>
                 </table>
-                <div>
+                <div className = {'block'}>
                     {navLinks}
                 </div>
             </div>
