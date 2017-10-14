@@ -1,5 +1,7 @@
 package com.titarenko.catalog;
 
+import com.titarenko.catalog.model.Product;
+import com.titarenko.catalog.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

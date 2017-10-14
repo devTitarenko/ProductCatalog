@@ -1,4 +1,4 @@
-package com.titarenko.catalog;
+package com.titarenko.catalog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
