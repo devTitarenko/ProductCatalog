@@ -1,5 +1,6 @@
 package com.titarenko.catalog;
 
+import com.titarenko.catalog.model.Product;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

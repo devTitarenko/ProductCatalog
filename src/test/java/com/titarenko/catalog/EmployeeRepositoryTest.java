@@ -1,5 +1,7 @@
 package com.titarenko.catalog;
 
+import com.titarenko.catalog.model.Product;
+import com.titarenko.catalog.repository.EmployeeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
