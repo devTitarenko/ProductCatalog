@@ -34,14 +34,14 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String updateProduct(@RequestBody Product product) {
+    public @ResponseBody Response updateProduct(@RequestBody Product product) {
         service.save(product);
-        return "Product's id is: " + product.getId();
+        return new Response(product.getId());
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String createProduct(@RequestBody Product product) {
+    public @ResponseBody Response createProduct(@RequestBody Product product) {
         service.save(product);
-        return "Product's id is: " + product.getId();
+        return new Response(product.getId());
     }
 }

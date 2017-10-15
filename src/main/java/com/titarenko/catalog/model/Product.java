@@ -1,12 +1,12 @@
 package com.titarenko.catalog.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Data
@@ -19,6 +19,7 @@ public class Product {
     @NotNull
     private String productName;
     @NotNull
+    @Min(value = 1)
     private Integer price;
     private String description;
 

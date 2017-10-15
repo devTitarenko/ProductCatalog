@@ -2,9 +2,14 @@ input.field {
     width: 90%;
 }
 
+.board {
+    width: 800px;
+}
+
 table {
     border-collapse: collapse;
     margin: 20px;
+    width: 100%;
 }
 
 td, th {
@@ -26,6 +31,32 @@ div {
 
 .block {
     display: block;
+}
+
+.column30 {
+    width: 30%;
+    text-overflow: ellipsis;
+}
+
+.column20 {
+    width: 20%;
+}
+
+.column15 {
+    width: 15%;
+}
+
+.column10 {
+    width: 10%;
+}
+
+textarea {
+    width: 95%;
+    resize: vertical;
+}
+
+input{
+    width: 100%;
 }
 
 /*Classes for creating dialogs*/

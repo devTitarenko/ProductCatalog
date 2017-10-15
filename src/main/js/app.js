@@ -33,7 +33,7 @@ var Board = React.createClass({
 
     updateProduct: function (product, i) {
         var array = this.state.data;
-        array[i] = product;
+        product.id !== null ? array[i] = product : array.push(product);
         this.setState({data: array});
     },
 
@@ -46,22 +46,39 @@ var Board = React.createClass({
         )
     },
 
+    addingForm: function (e) {
+        var product = {
+            productName: this.refs.newName.value,
+            price: this.refs.newPrice.value,
+            description: this.refs.newDescr.value
+        };
+        this.add(product);
+        this.refs.newName.value = null;
+        this.refs.newPrice.value = null;
+        this.refs.newDescr.value = null;
+        e.preventDefault();
+    },
+
     render: function () {
         return (
-            <div>
-                <button onClick={this.add.bind(null, {productName: "default"})}
-                        className="button-info create">Add new
-                </button>
+            <div className="board">
+                <form onSubmit={this.addingForm}>
+                    <input ref="newName" required={true}/>
+                    <input ref="newPrice" type="number" min={1} required={true}/>
+                    <textarea ref="newDescr"/>
+                    <button className="button-info create">Add new</button>
+                </form>
+                <br/>
                 <table>
                     <tbody>
                     <tr>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th className="column30">Product Name</th>
+                        <th className="column10">Price</th>
+                        <th className="column40">Description</th>
+                        <th className="column10">Edit</th>
+                        <th className="column10">Delete</th>
                     </tr>
-                        {this.state.data.map(this.forEachProduct)}
+                    {this.state.data.map(this.forEachProduct)}
                     </tbody>
                 </table>
             </div>
@@ -72,7 +89,13 @@ var Board = React.createClass({
 
 var Product = React.createClass({
     getInitialState: function () {
-        return {editing: this.props.children.id === undefined}
+        return {editing: false}
+    },
+
+    componentDidMount: function () {
+        if (!this.props.children.id) {
+            this.save();
+        }
     },
 
     edit: function () {
@@ -80,8 +103,8 @@ var Product = React.createClass({
     },
 
     remove: function () {
-        var r = confirm("Do you really want to delete this product?");
-        if (r === true) {
+        var answer = confirm("Do you really want to delete this product?");
+        if (answer === true) {
             fetch('/product/' + this.props.children.id, {
                 method: 'DELETE'
             });
@@ -91,30 +114,58 @@ var Product = React.createClass({
     },
 
     save: function () {
-        var val = {
-            id: this.props.children.id,
-            productName: this.refs.newName.value,
-            price: this.refs.newPrice.value,
-            description: this.refs.newDescr.value
-        };
-        console.log('New product' + val);
-        fetch('/product', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(val)
-        });
-        this.props.updateOnBoard(val, this.props.index);
-        this.setState({editing: false})
+        var product;
+        if (this.props.children.id) {
+            product = {
+                id: this.props.children.id,
+                productName: this.refs.changeName.value,
+                price: this.refs.changePrice.value,
+                description: this.refs.changeDescr.value,
+            }
+        } else {
+            product = {
+                id: this.props.children.id,
+                productName: this.props.children.productName,
+                price: this.props.children.price,
+                description: this.props.children.description
+            }
+        }
+        console.log('New product: ' + JSON.stringify(product, null, 2));
+        if (product.productName.trim() !== '' && product.price > 0) {
+            fetch('/product', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(product)
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(responseJson => {
+                        product.id = responseJson.savedId;
+                    });
+                    this.props.updateOnBoard(product, this.props.index);
+                    this.setState({editing: false})
+                } else {
+                    if (!product.id) {
+                        this.props.deleteFromBoard(this.props.index);
+                    }
+                    alert('Looks like there was a problem. Status Code: ' + response.status);
+                }
+            }).catch(err => {
+                console.log('Fetch Error: ', err);
+            });
+        } else {
+            alert('Product name should be not empty and price > 0 !')
+        }
     },
 
     cancel: function () {
-        if (this.props.children.id === undefined) {
+        if (!this.props.children.id) {
             this.props.deleteFromBoard(this.props.index);
+        } else {
+            this.setState({editing: false})
         }
-        this.setState({editing: false})
     },
 
     renderNormal: function () {
@@ -133,14 +184,14 @@ var Product = React.createClass({
         )
     },
 
-    renderForm: function () {
+    renderEdit: function () {
         return (
             <tr>
-                <td><textarea ref="newName" defaultValue={this.props.children.productName}/></td>
-                <td><textarea ref="newPrice" defaultValue={this.props.children.price}/></td>
-                <td><textarea ref="newDescr" defaultValue={this.props.children.description}/></td>
+                <td><input ref="changeName" defaultValue={this.props.children.productName}/></td>
+                <td><input ref="changePrice" defaultValue={this.props.children.price} type="number" min={1}/></td>
+                <td><textarea ref="changeDescr" defaultValue={this.props.children.description}/></td>
                 <td>
-                    <button className="button-success" onClick={this.save}>Save</button>
+                    <button onClick={this.save} className="button-success">Save</button>
                 </td>
                 <td>
                     <button onClick={this.cancel}>Cancel</button>
@@ -151,7 +202,7 @@ var Product = React.createClass({
 
     render: function () {
         if (this.state.editing) {
-            return this.renderForm();
+            return this.renderEdit();
         } else {
             return this.renderNormal();
         }
