@@ -46,8 +46,6 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -56,173 +54,336 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var Board = _react2.default.createClass({
+	    displayName: 'Board',
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var App = function (_Component) {
-	    _inherits(App, _Component);
-	
-	    function App() {
-	        _classCallCheck(this, App);
-	
-	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
-	
-	        _this.state = {
-	            movies: {},
-	            data: []
+	    getInitialState: function getInitialState() {
+	        return {
+	            data: [],
+	            addingSidebarVisibility: false,
+	            infoSidebarVisibility: false
 	        };
-	        return _this;
-	    }
+	    },
 	
-	    _createClass(App, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _this2 = this;
+	    componentDidMount: function componentDidMount() {
+	        var _this = this;
 	
-	            fetch('/product/all').then(function (Response) {
-	                return Response.json();
-	            }).then(function (responseJson) {
-	                _this2.setState({
-	                    movies: responseJson,
-	                    data: responseJson
-	                });
+	        fetch('/product/all').then(function (Response) {
+	            return Response.json();
+	        }).then(function (responseJson) {
+	            _this.setState({
+	                data: responseJson
 	            });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
+	        });
+	    },
+	
+	    add: function add(product) {
+	        var array = this.state.data;
+	        array.push(product);
+	        this.setState({ data: array });
+	    },
+	
+	    removeProduct: function removeProduct(i) {
+	        var array = this.state.data;
+	        array[i] = null;
+	        this.setState({ data: array });
+	    },
+	
+	    updateProduct: function updateProduct(product, i) {
+	        var array = this.state.data;
+	        array[i] = product;
+	        this.setState({ data: array });
+	    },
+	
+	    forEachProduct: function forEachProduct(product, i) {
+	        if (product) {
 	            return _react2.default.createElement(
+	                Product,
+	                { key: i, index: i,
+	                    updateOnBoard: this.updateProduct, deleteFromBoard: this.removeProduct },
+	                product
+	            );
+	        } else {
+	            return null;
+	        }
+	    },
+	
+	    addingNew: function addingNew(e) {
+	        var product = {
+	            productName: this.refs.newName.value,
+	            price: this.refs.newPrice.value,
+	            description: this.refs.newDescr.value
+	        };
+	        this.add(product);
+	        this.refs.newName.value = null;
+	        this.refs.newPrice.value = null;
+	        this.refs.newDescr.value = null;
+	        e.preventDefault();
+	    },
+	
+	    showHideAdding: function showHideAdding() {
+	        this.setState({ addingSidebarVisibility: !this.state.addingSidebarVisibility });
+	    },
+	
+	    showHideInfo: function showHideInfo() {
+	        this.setState({ infoSidebarVisibility: !this.state.infoSidebarVisibility });
+	    },
+	
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'board' },
+	            _react2.default.createElement(
 	                'div',
-	                null,
-	                JSON.stringify(this.state.movies, null, 2),
-	                _react2.default.createElement(ProductList, { products: this.state.data })
-	            );
-	        }
-	    }]);
-	
-	    return App;
-	}(_react.Component);
-	
-	var ProductList = function (_React$Component) {
-	    _inherits(ProductList, _React$Component);
-	
-	    function ProductList() {
-	        _classCallCheck(this, ProductList);
-	
-	        return _possibleConstructorReturn(this, (ProductList.__proto__ || Object.getPrototypeOf(ProductList)).apply(this, arguments));
-	    }
-	
-	    _createClass(ProductList, [{
-	        key: 'render',
-	        value: function render() {
-	            var products = this.props.products.map(function (product, key) {
-	                return _react2.default.createElement(Item, { product: product });
-	            });
-	            return _react2.default.createElement(
-	                'table',
-	                null,
-	                _react2.default.createElement(
-	                    'tbody',
-	                    null,
-	                    _react2.default.createElement(
-	                        'tr',
-	                        null,
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Product Name'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Price'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Description'
-	                        ),
-	                        _react2.default.createElement(
-	                            'th',
-	                            null,
-	                            'Delete'
-	                        )
-	                    ),
-	                    products
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return ProductList;
-	}(_react2.default.Component);
-	
-	var Item = function (_React$Component2) {
-	    _inherits(Item, _React$Component2);
-	
-	    function Item() {
-	        _classCallCheck(this, Item);
-	
-	        var _this4 = _possibleConstructorReturn(this, (Item.__proto__ || Object.getPrototypeOf(Item)).call(this));
-	
-	        _this4.state = {
-	            show: true
-	        };
-	        return _this4;
-	    }
-	
-	    _createClass(Item, [{
-	        key: 'remove',
-	        value: function remove() {
-	            var r = confirm("Do you really want to delete this product?");
-	            if (r == true) {
-	                fetch('/product/' + this.props.product.id, {
-	                    method: 'DELETE'
-	                });
-	                this.setState({ show: false });
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return this.state.show ? _react2.default.createElement(
-	                'tr',
-	                null,
-	                _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    this.props.product.productName
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    this.props.product.price
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    this.props.product.description
-	                ),
-	                _react2.default.createElement(
-	                    'td',
-	                    null,
+	                { className: 'sidebar' },
+	                this.state.addingSidebarVisibility && _react2.default.createElement(
+	                    'form',
+	                    { onSubmit: this.addingNew },
+	                    'Product Name:',
+	                    _react2.default.createElement('input', { ref: 'newName', required: true }),
+	                    'Price:',
+	                    _react2.default.createElement('input', { ref: 'newPrice', type: 'number', min: 1, required: true }),
+	                    'Description:',
+	                    _react2.default.createElement('textarea', { ref: 'newDescr' }),
 	                    _react2.default.createElement(
 	                        'button',
-	                        { onClick: this.remove.bind(this) },
-	                        'Delete'
+	                        { className: 'button button1' },
+	                        'Save'
 	                    )
 	                )
-	            ) : _react2.default.createElement('div', null);
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'central' },
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    'We have only the best for you!'
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.showHideAdding, className: 'button button5' },
+	                    'Add new'
+	                ),
+	                _react2.default.createElement(
+	                    'table',
+	                    null,
+	                    _react2.default.createElement(
+	                        'tbody',
+	                        null,
+	                        _react2.default.createElement(
+	                            'tr',
+	                            null,
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: 'column20' },
+	                                'Product Name'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: 'column13' },
+	                                'Price'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: 'column40' },
+	                                'Description'
+	                            ),
+	                            _react2.default.createElement(
+	                                'th',
+	                                { className: 'column27', colSpan: '2' },
+	                                'Commands'
+	                            )
+	                        ),
+	                        this.state.data.map(this.forEachProduct)
+	                    )
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'sidebar' },
+	                this.state.infoSidebarVisibility && _react2.default.createElement('form', null)
+	            )
+	        );
+	    }
+	});
+	
+	var Product = _react2.default.createClass({
+	    displayName: 'Product',
+	
+	    getInitialState: function getInitialState() {
+	        return { editing: false };
+	    },
+	
+	    componentDidMount: function componentDidMount() {
+	        if (!this.props.children.id) {
+	            this.save();
 	        }
-	    }]);
+	    },
 	
-	    return Item;
-	}(_react2.default.Component);
+	    edit: function edit() {
+	        this.setState({ editing: true });
+	    },
 	
-	(0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('react'));
+	    remove: function remove() {
+	        var answer = confirm("Do you really want to delete this product?");
+	        if (answer === true) {
+	            fetch('/product/' + this.props.children.id, {
+	                method: 'DELETE'
+	            });
+	            this.props.deleteFromBoard(this.props.index);
+	            this.setState({ show: false });
+	        }
+	    },
+	
+	    save: function save() {
+	        var _this2 = this;
+	
+	        var product;
+	        if (this.props.children.id) {
+	            product = {
+	                id: this.props.children.id,
+	                productName: this.refs.changeName.value,
+	                price: this.refs.changePrice.value,
+	                description: this.refs.changeDescr.value
+	            };
+	        } else {
+	            product = {
+	                id: this.props.children.id,
+	                productName: this.props.children.productName,
+	                price: this.props.children.price,
+	                description: this.props.children.description
+	            };
+	        }
+	        console.log('New product: ' + JSON.stringify(product, null, 2));
+	        if (product.productName.trim() !== '' && product.price > 0 && product.price < 2000000000) {
+	            fetch('/product', {
+	                method: 'PUT',
+	                headers: {
+	                    'Accept': 'application/json',
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify(product)
+	            }).then(function (response) {
+	                if (response.status === 200) {
+	                    response.json().then(function (responseJson) {
+	                        product.id = responseJson.savedId;
+	                    });
+	                    _this2.props.updateOnBoard(product, _this2.props.index);
+	                    _this2.setState({ editing: false });
+	                } else {
+	                    if (!product.id) {
+	                        _this2.props.deleteFromBoard(_this2.props.index);
+	                    }
+	                    alert('Looks like there was a problem. Status Code: ' + response.status);
+	                }
+	            }).catch(function (err) {
+	                console.log('Fetch Error: ', err);
+	            });
+	        } else {
+	            alert('Product name should be not empty and 0 < price < 2 billion $!');
+	        }
+	    },
+	
+	    cancel: function cancel() {
+	        if (!this.props.children.id) {
+	            this.props.deleteFromBoard(this.props.index);
+	        } else {
+	            this.setState({ editing: false });
+	        }
+	    },
+	
+	    renderNormal: function renderNormal() {
+	        return _react2.default.createElement(
+	            'tr',
+	            null,
+	            _react2.default.createElement(
+	                'td',
+	                { title: this.props.children.productName },
+	                this.props.children.productName
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                { title: this.props.children.price + " $" },
+	                this.props.children.price + " $"
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                { title: this.props.children.description },
+	                this.props.children.description
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'button button2', onClick: this.edit },
+	                    'Edit'
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'button button3', onClick: this.remove },
+	                    'Remove'
+	                )
+	            )
+	        );
+	    },
+	
+	    renderEdit: function renderEdit() {
+	        return _react2.default.createElement(
+	            'tr',
+	            null,
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement('input', { ref: 'changeName', defaultValue: this.props.children.productName })
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement('input', { ref: 'changePrice', defaultValue: this.props.children.price, type: 'number', min: 1,
+	                    max: 2000000000 })
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement('textarea', { ref: 'changeDescr', defaultValue: this.props.children.description })
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.save, className: 'button button1' },
+	                    'Save'
+	                )
+	            ),
+	            _react2.default.createElement(
+	                'td',
+	                null,
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.cancel, className: 'button button4' },
+	                    'Cancel'
+	                )
+	            )
+	        );
+	    },
+	
+	    render: function render() {
+	        if (this.state.editing) {
+	            return this.renderEdit();
+	        } else {
+	            return this.renderNormal();
+	        }
+	    }
+	});
+	
+	(0, _reactDom.render)(_react2.default.createElement(Board, null), document.getElementById('react'));
 
 /***/ }),
 /* 1 */
