@@ -7,7 +7,9 @@ var Board = React.createClass({
         return {
             data: [],
             addingSidebarVisibility: false,
-            infoSidebarVisibility: false
+            infoSidebarVisibility: false,
+            productIdInfo: null,
+            productFull: {}
         }
     },
 
@@ -42,25 +44,13 @@ var Board = React.createClass({
     forEachProduct: function (product, i) {
         if (product) {
             return <Product key={i} index={i}
-                            updateOnBoard={this.updateProduct} deleteFromBoard={this.removeProduct}>
+                            updateOnBoard={this.updateProduct} deleteFromBoard={this.removeProduct}
+                            productInfo={this.productInfo}>
                 {product}
             </Product>
         } else {
             return null;
         }
-    },
-
-    addingNew: function (e) {
-        var product = {
-            productName: this.refs.newName.value,
-            price: this.refs.newPrice.value,
-            description: this.refs.newDescr.value
-        };
-        this.add(product);
-        this.refs.newName.value = null;
-        this.refs.newPrice.value = null;
-        this.refs.newDescr.value = null;
-        e.preventDefault();
     },
 
     showHideAdding: function () {
@@ -69,6 +59,21 @@ var Board = React.createClass({
 
     showHideInfo: function () {
         this.setState({infoSidebarVisibility: !this.state.infoSidebarVisibility})
+    },
+
+    productInfo: function (productId) {
+        fetch('/product/info/' + productId)
+            .then(Response => Response.json())
+            .then(responseJson => {
+                this.setState({
+                    productFull: responseJson
+                })
+            });
+
+        if (!this.state.infoSidebarVisibility || this.state.productIdInfo === productId) {
+            this.showHideInfo();
+        }
+        this.setState({productIdInfo: productId});
     },
 
     sortByName: function () {
@@ -93,48 +98,88 @@ var Board = React.createClass({
         this.setState({data: array});
     },
 
+    checkIfProductListNotEmpty: function () {
+        var size = this.state.data.filter(product => {
+            return product !== null
+        }).length;
+        return size > 0;
+    },
+
+    getDetailsInfo: function () {
+        return (
+            <table>
+                <tbody>
+                <tr>
+                    <td className="info-title">Product ID:</td>
+                    <td>{this.state.productFull.id}</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Product name:</td>
+                    <td>{this.state.productFull.productName}</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Price:</td>
+                    <td>{this.state.productFull.price}</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Description:</td>
+                    <td>{this.state.productFull.description}</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Serie:</td>
+                    <td>Living room</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Link:</td>
+                    <td><a href="http://www.ikea.com">www.IKEA.com</a></td>
+                </tr>
+                <tr>
+                    <td className="info-title">Likes:</td>
+                    <td>3'256</td>
+                </tr>
+                <tr>
+                    <td className="info-title">Comments:</td>
+                    <td>IKEA is a multinational group, headquartered
+                        in the Netherlands, that designs and sells
+                        ready-to-assemble furniture, kitchen
+                        appliances and home accessories.
+                    </td>
+                </tr>
+                </tbody>
+            </table>)
+    },
+
     render: function () {
         return (
             <div className="board">
-                <div className="sidebar">
-                    {this.state.addingSidebarVisibility &&
-                    <form onSubmit={this.addingNew}>
-                        Product Name:
-                        <input ref="newName" required={true}/>
-                        Price:
-                        <input ref="newPrice" type="number" min={1} required={true}/>
-                        Description:
-                        <textarea ref="newDescr"/>
-                        <button className="button button1">Save</button>
-                    </form>
-                    }
+                <div className="sidebar left-sidebar">
+                    {this.state.addingSidebarVisibility && <AddNew addOnBoard={this.add}/>}
                 </div>
                 <div className="central">
                     <h1>We have only the best for you!</h1>
                     <button onClick={this.showHideAdding} className="button button5">Add new</button>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <th onClick={this.sortByName} className="column20">Product Name</th>
-                            <th onClick={this.sortByPrice} className="column13">Price</th>
-                            <th className="column40">Description</th>
-                            <th className="column27" colSpan="2">Commands</th>
-                        </tr>
-                        {this.state.data.map(this.forEachProduct)}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="sidebar">
-                    {this.state.infoSidebarVisibility &&
-                    <form>
-                    </form>
+                    {this.checkIfProductListNotEmpty() ? (
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <th onClick={this.sortByName} className="column20">Product Name</th>
+                                    <th onClick={this.sortByPrice} className="column13">Price</th>
+                                    <th className="column40">Description</th>
+                                    <th className="column27" colSpan="2">Commands</th>
+                                </tr>
+                                {this.state.data.map(this.forEachProduct)}
+                                </tbody>
+                            </table>) :
+                        (<h2 className="font-italic">Our catalog is empty now.</h2>)
                     }
+                </div>
+                <div className="sidebar right-sidebar">
+                    {this.state.infoSidebarVisibility && this.getDetailsInfo()}
                 </div>
             </div>
         );
     }
 });
-
 
 var Product = React.createClass({
     getInitialState: function () {
@@ -217,10 +262,15 @@ var Product = React.createClass({
         }
     },
 
+    showInfo: function () {
+        this.props.productInfo(this.props.children.id);
+    },
+
     renderNormal: function () {
         return (
             <tr>
-                <td title={this.props.children.productName}>{this.props.children.productName}</td>
+                <td onClick={this.showInfo} className="product-name"
+                    title={this.props.children.productName}>{this.props.children.productName}</td>
                 <td title={this.props.children.price + " $"}>{this.props.children.price + " $"}</td>
                 <td title={this.props.children.description}>{this.props.children.description}</td>
                 <td>
@@ -259,5 +309,33 @@ var Product = React.createClass({
     }
 });
 
+var AddNew = React.createClass({
+    addingNew: function (e) {
+        var product = {
+            productName: this.refs.newName.value,
+            price: this.refs.newPrice.value,
+            description: this.refs.newDescr.value
+        };
+        this.props.addOnBoard(product);
+        this.refs.newName.value = null;
+        this.refs.newPrice.value = null;
+        this.refs.newDescr.value = null;
+        e.preventDefault();
+    },
+
+    render: function () {
+        return (
+            <form onSubmit={this.addingNew}>
+                Product Name:
+                <input ref="newName" required={true}/>
+                Price:
+                <input ref="newPrice" type="number" min={1} required={true}/>
+                Description:
+                <textarea ref="newDescr"/>
+                <button className="button button1">Save</button>
+            </form>
+        )
+    }
+});
 
 render(<Board/>, document.getElementById('react'));

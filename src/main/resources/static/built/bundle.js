@@ -61,7 +61,9 @@
 	        return {
 	            data: [],
 	            addingSidebarVisibility: false,
-	            infoSidebarVisibility: false
+	            infoSidebarVisibility: false,
+	            productIdInfo: null,
+	            productFull: {}
 	        };
 	    },
 	
@@ -100,25 +102,13 @@
 	            return _react2.default.createElement(
 	                Product,
 	                { key: i, index: i,
-	                    updateOnBoard: this.updateProduct, deleteFromBoard: this.removeProduct },
+	                    updateOnBoard: this.updateProduct, deleteFromBoard: this.removeProduct,
+	                    productInfo: this.productInfo },
 	                product
 	            );
 	        } else {
 	            return null;
 	        }
-	    },
-	
-	    addingNew: function addingNew(e) {
-	        var product = {
-	            productName: this.refs.newName.value,
-	            price: this.refs.newPrice.value,
-	            description: this.refs.newDescr.value
-	        };
-	        this.add(product);
-	        this.refs.newName.value = null;
-	        this.refs.newPrice.value = null;
-	        this.refs.newDescr.value = null;
-	        e.preventDefault();
 	    },
 	
 	    showHideAdding: function showHideAdding() {
@@ -129,28 +119,185 @@
 	        this.setState({ infoSidebarVisibility: !this.state.infoSidebarVisibility });
 	    },
 	
+	    productInfo: function productInfo(productId) {
+	        var _this2 = this;
+	
+	        fetch('/product/info/' + productId).then(function (Response) {
+	            return Response.json();
+	        }).then(function (responseJson) {
+	            _this2.setState({
+	                productFull: responseJson
+	            });
+	        });
+	
+	        if (!this.state.infoSidebarVisibility || this.state.productIdInfo === productId) {
+	            this.showHideInfo();
+	        }
+	        this.setState({ productIdInfo: productId });
+	    },
+	
+	    sortByName: function sortByName() {
+	        var array = this.state.data;
+	        array.sort(function (a, b) {
+	            if (!a || !b) {
+	                return 1;
+	            } else return a.productName.localeCompare(b.productName);
+	        });
+	        this.setState({ data: array });
+	    },
+	
+	    sortByPrice: function sortByPrice() {
+	        var array = this.state.data;
+	        array.sort(function (a, b) {
+	            if (!a || !b) {
+	                return 1;
+	            } else return parseInt(a.price) - parseInt(b.price);
+	        });
+	        this.setState({ data: array });
+	    },
+	
+	    checkIfProductListNotEmpty: function checkIfProductListNotEmpty() {
+	        var size = this.state.data.filter(function (product) {
+	            return product !== null;
+	        }).length;
+	        return size > 0;
+	    },
+	
+	    getDetailsInfo: function getDetailsInfo() {
+	        return _react2.default.createElement(
+	            'table',
+	            null,
+	            _react2.default.createElement(
+	                'tbody',
+	                null,
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Product ID:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        this.state.productFull.id
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Product name:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        this.state.productFull.productName
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Price:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        this.state.productFull.price
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Description:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        this.state.productFull.description
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Serie:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        'Living room'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Link:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: 'http://www.ikea.com' },
+	                            'www.IKEA.com'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Likes:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        '3\'256'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'tr',
+	                    null,
+	                    _react2.default.createElement(
+	                        'td',
+	                        { className: 'info-title' },
+	                        'Comments:'
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
+	                        'IKEA is a multinational group, headquartered in the Netherlands, that designs and sells ready-to-assemble furniture, kitchen appliances and home accessories.'
+	                    )
+	                )
+	            )
+	        );
+	    },
+	
 	    render: function render() {
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'board' },
 	            _react2.default.createElement(
 	                'div',
-	                { className: 'sidebar' },
-	                this.state.addingSidebarVisibility && _react2.default.createElement(
-	                    'form',
-	                    { onSubmit: this.addingNew },
-	                    'Product Name:',
-	                    _react2.default.createElement('input', { ref: 'newName', required: true }),
-	                    'Price:',
-	                    _react2.default.createElement('input', { ref: 'newPrice', type: 'number', min: 1, required: true }),
-	                    'Description:',
-	                    _react2.default.createElement('textarea', { ref: 'newDescr' }),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'button button1' },
-	                        'Save'
-	                    )
-	                )
+	                { className: 'sidebar left-sidebar' },
+	                this.state.addingSidebarVisibility && _react2.default.createElement(AddNew, { addOnBoard: this.add })
 	            ),
 	            _react2.default.createElement(
 	                'div',
@@ -165,7 +312,7 @@
 	                    { onClick: this.showHideAdding, className: 'button button5' },
 	                    'Add new'
 	                ),
-	                _react2.default.createElement(
+	                this.checkIfProductListNotEmpty() ? _react2.default.createElement(
 	                    'table',
 	                    null,
 	                    _react2.default.createElement(
@@ -176,12 +323,12 @@
 	                            null,
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: 'column20' },
+	                                { onClick: this.sortByName, className: 'column20' },
 	                                'Product Name'
 	                            ),
 	                            _react2.default.createElement(
 	                                'th',
-	                                { className: 'column13' },
+	                                { onClick: this.sortByPrice, className: 'column13' },
 	                                'Price'
 	                            ),
 	                            _react2.default.createElement(
@@ -197,12 +344,16 @@
 	                        ),
 	                        this.state.data.map(this.forEachProduct)
 	                    )
+	                ) : _react2.default.createElement(
+	                    'h2',
+	                    { className: 'font-italic' },
+	                    'Our catalog is empty now.'
 	                )
 	            ),
 	            _react2.default.createElement(
 	                'div',
-	                { className: 'sidebar' },
-	                this.state.infoSidebarVisibility && _react2.default.createElement('form', null)
+	                { className: 'sidebar right-sidebar' },
+	                this.state.infoSidebarVisibility && this.getDetailsInfo()
 	            )
 	        );
 	    }
@@ -237,7 +388,7 @@
 	    },
 	
 	    save: function save() {
-	        var _this2 = this;
+	        var _this3 = this;
 	
 	        var product;
 	        if (this.props.children.id) {
@@ -269,11 +420,11 @@
 	                    response.json().then(function (responseJson) {
 	                        product.id = responseJson.savedId;
 	                    });
-	                    _this2.props.updateOnBoard(product, _this2.props.index);
-	                    _this2.setState({ editing: false });
+	                    _this3.props.updateOnBoard(product, _this3.props.index);
+	                    _this3.setState({ editing: false });
 	                } else {
 	                    if (!product.id) {
-	                        _this2.props.deleteFromBoard(_this2.props.index);
+	                        _this3.props.deleteFromBoard(_this3.props.index);
 	                    }
 	                    alert('Looks like there was a problem. Status Code: ' + response.status);
 	                }
@@ -293,13 +444,18 @@
 	        }
 	    },
 	
+	    showInfo: function showInfo() {
+	        this.props.productInfo(this.props.children.id);
+	    },
+	
 	    renderNormal: function renderNormal() {
 	        return _react2.default.createElement(
 	            'tr',
 	            null,
 	            _react2.default.createElement(
 	                'td',
-	                { title: this.props.children.productName },
+	                { onClick: this.showInfo, className: 'product-name',
+	                    title: this.props.children.productName },
 	                this.props.children.productName
 	            ),
 	            _react2.default.createElement(
@@ -380,6 +536,41 @@
 	        } else {
 	            return this.renderNormal();
 	        }
+	    }
+	});
+	
+	var AddNew = _react2.default.createClass({
+	    displayName: 'AddNew',
+	
+	    addingNew: function addingNew(e) {
+	        var product = {
+	            productName: this.refs.newName.value,
+	            price: this.refs.newPrice.value,
+	            description: this.refs.newDescr.value
+	        };
+	        this.props.addOnBoard(product);
+	        this.refs.newName.value = null;
+	        this.refs.newPrice.value = null;
+	        this.refs.newDescr.value = null;
+	        e.preventDefault();
+	    },
+	
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'form',
+	            { onSubmit: this.addingNew },
+	            'Product Name:',
+	            _react2.default.createElement('input', { ref: 'newName', required: true }),
+	            'Price:',
+	            _react2.default.createElement('input', { ref: 'newPrice', type: 'number', min: 1, required: true }),
+	            'Description:',
+	            _react2.default.createElement('textarea', { ref: 'newDescr' }),
+	            _react2.default.createElement(
+	                'button',
+	                { className: 'button button1' },
+	                'Save'
+	            )
+	        );
 	    }
 	});
 	

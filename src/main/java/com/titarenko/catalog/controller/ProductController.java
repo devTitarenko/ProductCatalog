@@ -15,16 +15,21 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping(path = "/add")
-    public @ResponseBody String addNewProduct(@RequestParam String productName,
-                                              @RequestParam Integer price) {
+    public @ResponseBody Response addNewProduct(@RequestParam String productName,
+                                                @RequestParam Integer price) {
         Product product = new Product(productName, price, null);
         service.save(product);
-        return "Product's id is: " + product.getId();
+        return new Response(product.getId());
     }
 
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<Product> getAllProducts() {
         return service.findAll();
+    }
+
+    @GetMapping(path = "/info/{id}")
+    public @ResponseBody Product getProductInfo(@PathVariable("id") Long id) {
+        return service.findOneById(id);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)

@@ -5,28 +5,38 @@ div {
 }
 
 .board {
-    width: 1200px;
+    width: 1260px;
     flex-direction: row;
 }
 
 .central {
     width: 650px;
-    margin: 25px;
+    margin: 30px;
+    align-self: flex-start;
 }
 
 .sidebar {
     width: 200px;
-    margin: 25px;
+    margin-top: 200px;
+    align-self: flex-start;
 }
 
-table {
+.left-sidebar {
+    width: 150px;
+}
+
+.right-sidebar {
+    width: 400px;
+}
+
+.central table {
     border-collapse: collapse;
-    table-layout:fixed;
+    table-layout: fixed;
     margin: 20px;
     width: 100%;
 }
 
-td, th {
+.central td, .central th {
     border: 1px solid #999;
     padding: 0.5rem;
     text-align: left;
@@ -35,8 +45,31 @@ td, th {
     overflow: hidden;
 }
 
-tr:nth-child(even) {
+.central tr:nth-child(even) {
     background-color: #f2f2f2
+}
+
+.right-sidebar table {
+    /*border-collapse: collapse;*/
+    table-layout: fixed;
+    /*margin: 20px;*/
+    width: 100%;
+}
+
+.right-sidebar td, .right-sidebar th {
+    /*border: 1px solid #999;*/
+    padding: 0.45rem;
+    text-align: left;
+    text-overflow: ellipsis;
+    /*white-space: nowrap;*/
+    overflow: hidden;
+}
+
+.info-title {
+    vertical-align: top;
+    text-align: right !important;
+    font-weight: bold;
+    width: 30%;
 }
 
 .block {
@@ -68,7 +101,7 @@ textarea {
     max-height: 200px;
 }
 
-input{
+input {
     width: 96%;
 }
 
@@ -76,8 +109,16 @@ form textarea {
     margin: 5px 0 20px;
 }
 
-form input{
+form input {
     margin: 5px 0 20px;
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+.product-name{
+    cursor: pointer;
 }
 
 /*BUTTONS*/
@@ -96,7 +137,7 @@ form input{
     cursor: pointer;
 }
 
-td .button{
+td .button {
     font-size: 12px;
     padding: 4px 10px;
 }
@@ -140,7 +181,9 @@ td .button{
     border: 2px solid #e7e7e7;
 }
 
-.button4:hover {background-color: #e7e7e7;}
+.button4:hover {
+    background-color: #e7e7e7;
+}
 
 .button5 {
     background-color: white;

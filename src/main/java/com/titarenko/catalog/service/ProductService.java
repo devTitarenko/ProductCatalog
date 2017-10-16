@@ -22,4 +22,8 @@ public class ProductService {
     public void save(Product product) {
         employeeRepository.save(product);
     }
+
+    public Product findOneById(Long productId) {
+        return employeeRepository.findOne(productId);
+    }
 }
