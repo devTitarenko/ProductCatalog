@@ -5,7 +5,9 @@ import {render} from 'react-dom';
 var Board = React.createClass({
     getInitialState: function () {
         return {
-            data: []
+            data: [],
+            addingSidebarVisibility: false,
+            infoSidebarVisibility: false
         }
     },
 
@@ -27,26 +29,28 @@ var Board = React.createClass({
 
     removeProduct: function (i) {
         var array = this.state.data;
-        array.splice(i, 1);
+        array[i] = null;
         this.setState({data: array});
     },
 
     updateProduct: function (product, i) {
         var array = this.state.data;
-        product.id !== null ? array[i] = product : array.push(product);
+        array[i] = product;
         this.setState({data: array});
     },
 
     forEachProduct: function (product, i) {
-        return (
-            <Product key={i} index={i}
-                     updateOnBoard={this.updateProduct} deleteFromBoard={this.removeProduct}>
+        if (product) {
+            return <Product key={i} index={i}
+                            updateOnBoard={this.updateProduct} deleteFromBoard={this.removeProduct}>
                 {product}
             </Product>
-        )
+        } else {
+            return null;
+        }
     },
 
-    addingForm: function (e) {
+    addingNew: function (e) {
         var product = {
             productName: this.refs.newName.value,
             price: this.refs.newPrice.value,
@@ -59,28 +63,51 @@ var Board = React.createClass({
         e.preventDefault();
     },
 
+    showHideAdding: function () {
+        this.setState({addingSidebarVisibility: !this.state.addingSidebarVisibility})
+    },
+
+    showHideInfo: function () {
+        this.setState({infoSidebarVisibility: !this.state.infoSidebarVisibility})
+    },
+
     render: function () {
         return (
             <div className="board">
-                <form onSubmit={this.addingForm}>
-                    <input ref="newName" required={true}/>
-                    <input ref="newPrice" type="number" min={1} required={true}/>
-                    <textarea ref="newDescr"/>
-                    <button className="button-info create">Add new</button>
-                </form>
-                <br/>
-                <table>
-                    <tbody>
-                    <tr>
-                        <th className="column30">Product Name</th>
-                        <th className="column10">Price</th>
-                        <th className="column40">Description</th>
-                        <th className="column10">Edit</th>
-                        <th className="column10">Delete</th>
-                    </tr>
-                    {this.state.data.map(this.forEachProduct)}
-                    </tbody>
-                </table>
+                <div className="sidebar">
+                    {this.state.addingSidebarVisibility &&
+                    <form onSubmit={this.addingNew}>
+                        Product Name:
+                        <input ref="newName" required={true}/>
+                        Price:
+                        <input ref="newPrice" type="number" min={1} required={true}/>
+                        Description:
+                        <textarea ref="newDescr"/>
+                        <button className="button button1">Save</button>
+                    </form>
+                    }
+                </div>
+                <div className="central">
+                    <h1>We have only the best for you!</h1>
+                    <button onClick={this.showHideAdding} className="button button5">Add new</button>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th className="column20">Product Name</th>
+                            <th className="column13">Price</th>
+                            <th className="column40">Description</th>
+                            <th className="column27" colSpan="2">Commands</th>
+                        </tr>
+                        {this.state.data.map(this.forEachProduct)}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="sidebar">
+                    {this.state.infoSidebarVisibility &&
+                    <form>
+                    </form>
+                    }
+                </div>
             </div>
         );
     }
@@ -131,7 +158,7 @@ var Product = React.createClass({
             }
         }
         console.log('New product: ' + JSON.stringify(product, null, 2));
-        if (product.productName.trim() !== '' && product.price > 0) {
+        if (product.productName.trim() !== '' && product.price > 0 && product.price < 2000000000) {
             fetch('/product', {
                 method: 'PUT',
                 headers: {
@@ -156,7 +183,7 @@ var Product = React.createClass({
                 console.log('Fetch Error: ', err);
             });
         } else {
-            alert('Product name should be not empty and price > 0 !')
+            alert('Product name should be not empty and 0 < price < 2 billion $!')
         }
     },
 
@@ -171,14 +198,14 @@ var Product = React.createClass({
     renderNormal: function () {
         return (
             <tr>
-                <td>{this.props.children.productName}</td>
-                <td>{this.props.children.price}</td>
-                <td>{this.props.children.description}</td>
+                <td title={this.props.children.productName}>{this.props.children.productName}</td>
+                <td title={this.props.children.price + " $"}>{this.props.children.price + " $"}</td>
+                <td title={this.props.children.description}>{this.props.children.description}</td>
                 <td>
-                    <button className="button-primary" onClick={this.edit}>Edit</button>
+                    <button className="button button2" onClick={this.edit}>Edit</button>
                 </td>
                 <td>
-                    <button className="button-danger" onClick={this.remove}>Remove</button>
+                    <button className="button button3" onClick={this.remove}>Remove</button>
                 </td>
             </tr>
         )
@@ -188,13 +215,14 @@ var Product = React.createClass({
         return (
             <tr>
                 <td><input ref="changeName" defaultValue={this.props.children.productName}/></td>
-                <td><input ref="changePrice" defaultValue={this.props.children.price} type="number" min={1}/></td>
+                <td><input ref="changePrice" defaultValue={this.props.children.price} type="number" min={1}
+                           max={2000000000}/></td>
                 <td><textarea ref="changeDescr" defaultValue={this.props.children.description}/></td>
                 <td>
-                    <button onClick={this.save} className="button-success">Save</button>
+                    <button onClick={this.save} className="button button1">Save</button>
                 </td>
                 <td>
-                    <button onClick={this.cancel}>Cancel</button>
+                    <button onClick={this.cancel} className="button button4">Cancel</button>
                 </td>
             </tr>
         )

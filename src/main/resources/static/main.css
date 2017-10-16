@@ -1,13 +1,27 @@
-input.field {
-    width: 90%;
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .board {
-    width: 800px;
+    width: 1200px;
+    flex-direction: row;
+}
+
+.central {
+    width: 650px;
+    margin: 25px;
+}
+
+.sidebar {
+    width: 200px;
+    margin: 25px;
 }
 
 table {
     border-collapse: collapse;
+    table-layout:fixed;
     margin: 20px;
     width: 100%;
 }
@@ -16,103 +30,123 @@ td, th {
     border: 1px solid #999;
     padding: 0.5rem;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 tr:nth-child(even) {
     background-color: #f2f2f2
 }
 
-div {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .block {
     display: block;
 }
 
-.column30 {
-    width: 30%;
-    text-overflow: ellipsis;
+.column40 {
+    width: 40%;
+}
+
+.column27 {
+    width: 27%;
 }
 
 .column20 {
     width: 20%;
 }
 
-.column15 {
-    width: 15%;
-}
-
-.column10 {
-    width: 10%;
+.column13 {
+    width: 13%;
 }
 
 textarea {
     width: 95%;
     resize: vertical;
+    height: 27px;
+    max-height: 200px;
 }
 
 input{
-    width: 100%;
+    width: 96%;
 }
 
-/*Classes for creating dialogs*/
-
-.modalDialog {
-    position: fixed;
-    font-family: Arial, Helvetica, sans-serif;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 99999;
-    opacity: 0;
-    -webkit-transition: opacity 400ms ease-in;
-    -moz-transition: opacity 400ms ease-in;
-    transition: opacity 400ms ease-in;
-    pointer-events: none;
+form textarea {
+    margin: 5px 0 20px;
 }
 
-.modalDialog:target {
-    opacity: 1;
-    pointer-events: auto;
+form input{
+    margin: 5px 0 20px;
 }
 
-.modalDialog > div {
-    width: 400px;
-    position: relative;
-    margin: 10% auto;
-    padding: 5px 20px 13px 20px;
-    border-radius: 10px;
-    background: #fff;
-    background: -moz-linear-gradient(#fff, #999);
-    background: -webkit-linear-gradient(#fff, #999);
-    background: -o-linear-gradient(#fff, #999);
-}
-
-.close {
-    background: #606061;
-    color: #FFFFFF;
-    line-height: 25px;
-    position: absolute;
-    right: -12px;
+/*BUTTONS*/
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 4px 12px;
     text-align: center;
-    top: -10px;
-    width: 24px;
     text-decoration: none;
-    font-weight: bold;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    -moz-box-shadow: 1px 1px 3px #000;
-    -webkit-box-shadow: 1px 1px 3px #000;
-    box-shadow: 1px 1px 3px #000;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
 }
 
-.close:hover {
-    background: #00d9ff;
+td .button{
+    font-size: 12px;
+    padding: 4px 10px;
+}
+
+.button1 {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button2 {
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+}
+
+.button2:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.button3 {
+    background-color: white;
+    color: black;
+    border: 2px solid #f44336;
+}
+
+.button3:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+.button4 {
+    background-color: white;
+    color: black;
+    border: 2px solid #e7e7e7;
+}
+
+.button4:hover {background-color: #e7e7e7;}
+
+.button5 {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+}
+
+.button5:hover {
+    background-color: #555555;
+    color: white;
 }
