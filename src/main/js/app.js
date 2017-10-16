@@ -329,7 +329,7 @@ var AddNew = React.createClass({
                 Product Name:
                 <input ref="newName" required={true}/>
                 Price:
-                <input ref="newPrice" type="number" min={1} required={true}/>
+                <input ref="newPrice" type="number" min={1} max={2000000000} required={true}/>
                 Description:
                 <textarea ref="newDescr"/>
                 <button className="button button1">Save</button>

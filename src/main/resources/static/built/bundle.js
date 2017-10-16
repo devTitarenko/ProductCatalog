@@ -562,7 +562,7 @@
 	            'Product Name:',
 	            _react2.default.createElement('input', { ref: 'newName', required: true }),
 	            'Price:',
-	            _react2.default.createElement('input', { ref: 'newPrice', type: 'number', min: 1, required: true }),
+	            _react2.default.createElement('input', { ref: 'newPrice', type: 'number', min: 1, max: 2000000000, required: true }),
 	            'Description:',
 	            _react2.default.createElement('textarea', { ref: 'newDescr' }),
 	            _react2.default.createElement(
