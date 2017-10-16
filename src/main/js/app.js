@@ -71,6 +71,28 @@ var Board = React.createClass({
         this.setState({infoSidebarVisibility: !this.state.infoSidebarVisibility})
     },
 
+    sortByName: function () {
+        var array = this.state.data;
+        array.sort(function (a, b) {
+            if (!a || !b) {
+                return 1;
+            } else
+                return a.productName.localeCompare(b.productName);
+        });
+        this.setState({data: array});
+    },
+
+    sortByPrice: function () {
+        var array = this.state.data;
+        array.sort(function (a, b) {
+            if (!a || !b) {
+                return 1;
+            } else
+                return parseInt(a.price) - parseInt(b.price);
+        });
+        this.setState({data: array});
+    },
+
     render: function () {
         return (
             <div className="board">
@@ -93,8 +115,8 @@ var Board = React.createClass({
                     <table>
                         <tbody>
                         <tr>
-                            <th className="column20">Product Name</th>
-                            <th className="column13">Price</th>
+                            <th onClick={this.sortByName} className="column20">Product Name</th>
+                            <th onClick={this.sortByPrice} className="column13">Price</th>
                             <th className="column40">Description</th>
                             <th className="column27" colSpan="2">Commands</th>
                         </tr>

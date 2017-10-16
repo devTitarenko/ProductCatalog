@@ -53,10 +53,12 @@ tr:nth-child(even) {
 
 .column20 {
     width: 20%;
+    cursor: pointer;
 }
 
 .column13 {
     width: 13%;
+    cursor: pointer;
 }
 
 textarea {
