@@ -11,7 +11,7 @@ Screenshot
 
 For launching
 -------------------------
-Just Run `com.titarenko.catalog.StartProductCatalog` method.
+Just Run `com.titarenko.catalog.StartProductCatalog.main` method.
 
 Or do `java -jar product-catalog-app.jar` in terminal.
 
