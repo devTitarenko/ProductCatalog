@@ -269,7 +269,7 @@
 	                    _react2.default.createElement(
 	                        'td',
 	                        null,
-	                        '3\'256'
+	                        '3 256'
 	                    )
 	                ),
 	                _react2.default.createElement(

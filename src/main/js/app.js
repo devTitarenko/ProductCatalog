@@ -135,7 +135,7 @@ var Board = React.createClass({
                 </tr>
                 <tr>
                     <td className="info-title">Likes:</td>
-                    <td>3'256</td>
+                    <td>3 256</td>
                 </tr>
                 <tr>
                     <td className="info-title">Comments:</td>
