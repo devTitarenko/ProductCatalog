@@ -5,6 +5,10 @@ _________________________
 Spring Boot RESTful Web Service with React.js on the frontend.
 
 
+Screenshot
+-------------------------
+![](https://raw.githubusercontent.com/devTitarenko/ProductCatalog/master/Screenshot.png)
+
 For launching
 -------------------------
 Just Run `com.titarenko.catalog.StartProductCatalog` method.
