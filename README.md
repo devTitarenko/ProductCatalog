@@ -15,7 +15,9 @@ Just Run `com.titarenko.catalog.StartProductCatalog.main` method.
 
 Or do `java -jar product-catalog-app.jar` in terminal.
 
-For clean install launch `mvn install` and maven **frontend-maven-plugin** will generate new _bundle.js_. 
+For clean install launch `mvn install` and maven **frontend-maven-plugin** will generate new _bundle.js_.
+
+Go to `localhost:8080`.
 
 
 Features
@@ -34,3 +36,18 @@ Technologies
 - React.js + CSS
 - Maven
 - JUnit
+
+
+Database
+-------------------------
+Go to `localhost:8080/h2-console/login.do`.
+In the JDBC url use `jdbc:h2:mem:testdb`.
+Keep the password blank.
+Click on Connect.
+
+
+Run with Docker
+-------------------------
+`docker build -t catalog-image .`
+
+`docker run --name CatalogProgram -p 8080:8080 catalog-image`
