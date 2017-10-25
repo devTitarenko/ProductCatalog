@@ -48,6 +48,12 @@ Click on Connect.
 
 Run with Docker
 -------------------------
+- Pull from **hub.docker**:
+
+`docker run --name CatalogProgram -p 8080:8080 devtitarenko/product_catalog-image`
+
+- Or create locally:
+
 `docker build -t catalog-image .`
 
 `docker run --name CatalogProgram -p 8080:8080 catalog-image`
